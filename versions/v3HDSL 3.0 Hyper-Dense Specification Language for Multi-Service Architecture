@@ -1,0 +1,446 @@
+# HDSL 3.0 - Hyper-Dense Specification Language for Multi-Service Architecture
+
+## Introduction
+
+HDSL 3.0 (Hyper-Dense Specification Language) is a comprehensive domain-specific language for defining software projects with precise control over integration points while allowing flexibility in implementation details. This version is designed to coordinate development across multiple AI systems, ensuring seamless integration while giving each system appropriate creative freedom.
+
+## Core Principles
+
+1. **Strict vs Flexible Specifications**: Clearly distinguish between components that must be implemented exactly as specified and those where creative latitude is permitted.
+2. **Integration-First**: Prioritize clear definition of integration points and contracts between services.
+3. **User-Story Driven**: Base all development on well-defined user stories.
+4. **File Structure Precision**: Explicitly define project structure and file contents.
+5. **Attribution and History**: Track authorship and development changes.
+
+## Basic Structure and Syntax
+
+### Symbol Definitions
+* §: Section marker
+* @: Component/Entity marker
+* #: Property/Field marker
+* &: Inclusion/Composition marker
+* ~: Relationship marker
+* !: Command/Action marker
+* ?: Condition marker
+* $: Variable marker
+* *: Required element marker (MUST be implemented exactly as specified)
+* `: String literal marker
+* :: Type definition marker
+* --: Comment marker (ignored by interpreter)
+
+## Core Sections
+
+### §AUTHOR: Attribution Information
+```
+§AUTHOR
+*#creator=`Name of original specification author`
+#organization=`Organization name`
+#contact=`Contact information`
+*#created=`Creation date`
+#version_history=[
+  {date: "2023-12-01", author: "John Doe", version: "1.0", changes: "Initial version"},
+  {date: "2023-12-15", author: "Jane Smith", version: "1.1", changes: "Added UI components"}
+]
+```
+
+### §PRJ: Project Information
+```
+§PRJ
+*#name=`ProjectName`
+*#type=`project-type` [frontend|backend|fullstack|microservice|prototype]
+*#stack=[`Technology1`,`Technology2`,`Technology3`]
+*#desc=`Project description`
+*#version=`1.0`
+#team=`Team or company name`
+```
+
+### §SCOPE: Project Scope and Deliverables
+```
+§SCOPE
+*!LEVEL:[PROTOTYPE|MVP|FULL]
+*!IMPLEMENTATION:[UI_Only|UI_with_Mocks|Full_Stack|Microservice]
+!TIMEFRAME:`Short description of timeframe`
+!EXCLUSIONS:[`Feature1`,`Feature2`] # Explicitly excluded features
+```
+
+### §CONSTRAINTS: Flexibility Control
+```
+§CONSTRAINTS
+!STRICT:[Models,APIs,IntegrationPoints] # Must be implemented exactly as specified
+!SEMI_FLEXIBLE:[UIComponents,Documentation] # Some creative freedom allowed
+!FLEXIBLE:[Styling,LocalLogic,Optimizations] # Significant creative freedom allowed
+```
+
+### §ARC: Architecture
+```
+§ARC
+*@Frontend
+*&React
+&TailwindCSS
+~USE:@Backend:API
+
+@Backend
+&Node.js
+&Express
+~USE:@Database
+
+@Database
+&MongoDB
+```
+
+### §INTEGRATION: Service Interaction Specification
+```
+§INTEGRATION
+@Frontend>Backend [STRICT]
+*#endpoints={
+  "/api/resource": "GET,POST",
+  "/api/another-resource": "GET,PUT,DELETE"
+}
+*#authentication=`JWT`
+*#headers={Authorization, Content-Type}
+*#response_format=`JSON`
+
+@Backend>Database [STRICT]
+*#connection_type=`MongoDB Connection String`
+*#models=`Use exact schema definitions from §MOD section`
+```
+
+### §PRIORITY: Feature Priorities
+```
+§PRIORITY
+*!P0:[CriticalFeature1,CriticalFeature2] # Must have
+!P1:[ImportantFeature1,ImportantFeature2] # Should have
+!P2:[NiceToHaveFeature1,NiceToHaveFeature2] # Could have
+```
+
+### §DEPENDENCY: Component Dependencies
+```
+§DEPENDENCY
+@ComponentA>[ComponentB,ComponentC] # ComponentA depends on B and C
+@ComponentD>ComponentE # ComponentD depends on E
+```
+
+### §MOD: Data Models
+```
+§MOD
+@ModelName [STRICT] # Must be implemented exactly as specified
+*#id::id
+*#requiredField::string
+#optionalField::number
+~HAS:@ChildModel:children[]
+
+@AnotherModel [FLEXIBLE] # Can be adapted as needed
+#id::id
+#name::string
+```
+
+### §FILE_STRUCTURE: Project Structure Specification
+```
+§FILE_STRUCTURE [STRICT]
+@Frontend
+*#root=`/frontend`
+*#structure={
+  "/src/components/": {
+    "common/": ["Button.tsx", "Card.tsx"],
+    "feature/": ["FeatureComponent.tsx"]
+  },
+  "/src/pages/": ["index.tsx", "feature.tsx"],
+  "/src/hooks/": ["useFeature.ts"],
+  "/src/utils/": ["helpers.ts"]
+}
+*#naming_convention=`kebab-case for files, PascalCase for components`
+
+@Backend
+*#root=`/backend`
+*#structure={
+  "/src/controllers/": ["resourceController.js"],
+  "/src/models/": ["Resource.js"],
+  "/src/routes/": ["resourceRoutes.js"],
+  "/src/services/": ["resourceService.js"]
+}
+```
+
+### §COMPONENT_DETAIL: Detailed Component Specifications
+```
+§COMPONENT_DETAIL [SEMI_FLEXIBLE]
+@ComponentName
+*#file=`/path/to/ComponentName.tsx`
+*#imports=[
+  "React, { useState } from 'react'",
+  "../ui/Button",
+  "../hooks/useFeature"
+]
+*#props={
+  required: { type: "string", required: true },
+  optional: { type: "number", required: false, default: 0 }
+}
+*#state_variables=[
+  "data",
+  "loading"
+]
+*#template=`
+import React, { useState } from 'react';
+import Button from '../ui/Button';
+import { useFeature } from '../hooks/useFeature';
+
+interface ComponentNameProps {
+  required: string;
+  optional?: number;
+}
+
+export const ComponentName: React.FC<ComponentNameProps> = ({
+  required,
+  optional = 0
+}) => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  
+  // Component logic here
+  
+  return (
+    <div>
+      {/* Component JSX */}
+    </div>
+  );
+};
+`
+```
+
+### §API_DETAIL: API Endpoint Specifications
+```
+§API_DETAIL [STRICT]
+@ResourceAPI
+*#file=`/backend/src/controllers/resourceController.js`
+*#endpoint=`GET /api/resources`
+*#parameters={
+  page: { type: "number", required: false, default: 1 },
+  limit: { type: "number", required: false, default: 10 }
+}
+*#response={
+  status: 200,
+  body: {
+    data: [
+      { id: "1", name: "Resource 1" }
+    ],
+    pagination: {
+      total: 100,
+      page: 1,
+      limit: 10
+    }
+  }
+}
+*#error_responses=[
+  { status: 400, code: "INVALID_PARAMETERS", message: "Invalid parameters" },
+  { status: 401, code: "UNAUTHORIZED", message: "Authentication required" }
+]
+*#implementation=`
+exports.getResources = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    
+    // Implementation details
+    
+  } catch (error) {
+    // Error handling
+  }
+};
+`
+```
+
+### §CMP: Components
+```
+§CMP
+@ComponentName [REQUIRED]
+*#props={requiredProp1,requiredProp2}
+#optionalProps={prop1,prop2}
+*&RequiredSubComponent
+&OptionalSubComponent
+~USE:@OtherComponent
+
+@AnotherComponent [OPTIONAL]
+#props={prop1,prop2}
+```
+
+### §UI: UI Elements
+```
+§UI
+@UIComponent [SEMI_FLEXIBLE]
+*#variants=`primary,secondary,danger`
+#states=`default,hover,active,disabled`
+*#accessibility=`WCAG AA compliance`
+!STYL
+```
+
+### §STYLE: Styling Specifications
+```
+§STYLE [FLEXIBLE]
+@BrandColors [STRICT]
+*#primary=`#1976D2`
+*#secondary=`#455A64`
+
+@FunctionalColors [SEMI_FLEXIBLE]
+*#semantic={
+  success: {base: "#2E7D32", allowed_range: ["#1B5E20", "#4CAF50"]},
+  warning: {base: "#ED6C02", allowed_range: ["#E65100", "#FF9800"]},
+  danger: {base: "#D32F2F", allowed_range: ["#B71C1C", "#EF5350"]},
+  info: {base: "#0288D1", allowed_range: ["#01579B", "#29B6F6"]}
+}
+```
+
+### §FLW: Workflows
+```
+§FLW
+@MainFlow [REQUIRED]
+*#Step1: ComponentA > ComponentB
+*#Step2: ComponentB > [Condition] > ComponentC | ComponentD
+
+@SecondaryFlow [OPTIONAL]
+#Step1: ComponentE > ComponentF
+```
+
+### §USER_STORY: User Stories
+```
+§USER_STORY [STRICT]
+@UserPersona
+*#persona=`Description of user`
+*#goals=[`Primary goal`, `Secondary goal`]
+*#pain_points=[`Pain point 1`, `Pain point 2`]
+
+*#story_1=`As a [role], I want to [action], so that [benefit]`
+*#components=[Component1,Component2]
+*#acceptance=[
+  `Acceptance criterion 1`,
+  `Acceptance criterion 2`
+]
+*#api_dependencies=["/api/resource1", "/api/resource2"]
+*#priority=`P0`
+```
+
+### §DATA_FLOW: Data Flow Specifications
+```
+§DATA_FLOW [STRICT]
+@FeatureFlow
+*#flow_steps=[
+  {
+    name: "InitialLoad",
+    components: ["Component1", "Hook1"],
+    description: "Load initial data when component mounts",
+    implementation: "useEffect hook calls API"
+  },
+  {
+    name: "UserAction",
+    components: ["Component1", "Component2"],
+    description: "User performs action triggering data update",
+    implementation: "Event handler updates state"
+  }
+]
+*#data_dependencies={
+  "Component1 → Component2": ["prop1", "prop2"],
+  "Component2 → API": ["requestParams"],
+  "API → Component2": ["responseData"]
+}
+```
+
+### §TEST: Test Scenarios
+```
+§TEST
+@ComponentTest
+#scenario_1=`Description of test scenario 1`
+#expected_1=`Expected outcome of scenario 1`
+#scenario_2=`Description of test scenario 2`
+#expected_2=`Expected outcome of scenario 2`
+```
+
+### §MOCK: Mock Data
+```
+§MOCK
+@ModelName
+!DATA:[
+  {
+    id: "example-id-1",
+    field1: "Example value",
+    field2: 42
+  }
+]
+!GENERATOR:functionName() {
+  // Mock data generation logic
+}
+```
+
+### §HISTORY: Development History
+```
+§HISTORY
+@Version1.0 [2023-12-01]
+*#author=`John Doe`
+*#changes=[
+  {component: "Feature1", type: "implementation", description: "Initial implementation"},
+  {component: "Feature2", type: "bugfix", description: "Fixed issue with data loading"}
+]
+
+@Version1.1 [2023-12-15]
+*#author=`Jane Smith`
+*#changes=[
+  {component: "Feature3", type: "enhancement", description: "Added new functionality"}
+]
+```
+
+## Implementation Guidelines
+
+### Flexibility Levels
+
+1. **STRICT** - Must be implemented exactly as specified:
+   - Data models and schemas
+   - API contracts and endpoints
+   - Integration points between services
+   - Authentication and authorization
+
+2. **SEMI_FLEXIBLE** - Can be adapted with some creative freedom:
+   - UI component implementation details
+   - Error handling strategies
+   - Performance optimizations
+   - Documentation format
+
+3. **FLEXIBLE** - Significant creative freedom allowed:
+   - Visual styling (within brand guidelines)
+   - Animation and transitions
+   - Local component logic
+   - Developer experience tools
+
+### Required vs Optional Elements
+
+- Elements marked with * are required and must be implemented as specified
+- Elements within sections marked [REQUIRED] must be implemented
+- Elements within sections marked [STRICT] must be implemented exactly as specified
+- P0 features must be implemented in any version
+- P1 features should be implemented if possible
+- P2 features are only for full versions if time permits
+
+## Compatibility Rules
+
+1. **API Contracts**: 
+   - All APIs must follow the exact specifications in §API_DETAIL
+   - Response formats must match exactly
+   - Error codes and messages must be consistent
+
+2. **Data Models**:
+   - Schema definitions must be followed exactly for [STRICT] models
+   - Field names and types must match specifications
+   - Relationships between models must be maintained
+
+3. **File Structure**:
+   - Follow the exact folder structure in §FILE_STRUCTURE
+   - Use the specified naming conventions
+   - Place files in their designated locations
+
+4. **Component Integration**:
+   - Components must accept and properly handle all specified props
+   - Data flow between components must follow §DATA_FLOW specifications
+   - Event handling must maintain the specified workflows
+
+## Best Practices
+
+1. **Start with User Stories**: All implementation should be traceable to user stories
+2. **Focus on Integration Points**: Pay special attention to interfaces between components
+3. **Respect Strict vs Flexible**: Adhere to flexibility guidelines for each section
+4. **Document Changes**: Record any deviations from the specification in §HISTORY
+5. **Maintain Compatibility**: Ensure all components can work together as specified

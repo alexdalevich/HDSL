@@ -1,0 +1,149 @@
+<CPML>
+/* CompactPML: AI-friendly project specification language
+ * Rules:
+ * - Sections marked with ## SECTION_NAME
+ * - Key-value pairs use format: KEY: VALUE
+ * - Lists use - prefix
+ * - Components use @component syntax
+ * - Code patterns use !pattern syntax
+ * - Hierarchies shown through indentation
+ */
+
+## META
+NAME: "TaskManager App"
+STACK: React, Node.js, MongoDB
+AUTHOR: User
+VERSION: 1.0
+
+## ARCHITECTURE
+- client/
+  - components/
+  - services/
+  - store/
+- server/
+  - controllers/
+  - models/
+  - routes/
+
+## COMPONENTS
+@component Header {
+  type: "navigation",
+  elements: ["Logo", "Menu", "SearchBar", "UserProfile"],
+  state: "minimal", // Known pattern: minimal state
+  responsive: true
+}
+
+@component ProductList {
+  type: "data-view",
+  data_source: "products API",
+  layout: "grid(3,2,1)", // 3 cols desktop, 2 tablet, 1 mobile
+  elements: ["ProductCard", "Pagination", "FilterSidebar"],
+  state: "filterable", // Known pattern: filterable list
+  behavior: "infinite-scroll"
+}
+
+## DATA_MODELS
+!model Product {
+  fields: {
+    id: "ObjectId",
+    name: "String(required)",
+    price: "Number(required)",
+    description: "String",
+    image_url: "String",
+    category: "String(enum)",
+    created_at: "Date"
+  },
+  relations: ["Category", "Review"],
+  validations: ["price > 0", "name.length >= 3"]
+}
+
+## FLOWS
+!flow Purchase {
+  steps: [
+    "BrowseProducts → SelectProduct",
+    "AddToCart → ViewCart",
+    "Checkout → EnterShippingInfo → EnterPayment",
+    "ConfirmOrder → DisplayConfirmation"
+  ],
+  api_calls: ["GET /products", "POST /cart", "POST /orders"]
+}
+
+## STYLES
+!style MainTheme {
+  colors: {
+    primary: "#3B82F6",
+    secondary: "#10B981",
+    background: "#F9FAFB",
+    text: "#1F2937"
+  },
+  typography: "system-ui, sans-serif",
+  spacing: "4px base unit",
+  shadows: "material design standard"
+}
+
+## API
+!api ProductAPI {
+  endpoints: [
+    "GET /products - List all products with pagination",
+    "GET /products/:id - Get single product details",
+    "POST /products - Create new product (auth required)",
+    "PUT /products/:id - Update product (auth required)",
+    "DELETE /products/:id - Delete product (auth required)"
+  ],
+  auth: "JWT",
+  rate_limit: "100 requests per minute"
+}
+
+## PATTERNS
+!pattern AuthFlow {
+  type: "JWT authentication",
+  storage: "localStorage",
+  routes: ["Login", "Register", "ForgotPassword", "ResetPassword"],
+  protected_routes: ["Profile", "Admin", "Checkout"]
+}
+
+!pattern Responsive {
+  breakpoints: [
+    "mobile: 0-640px",
+    "tablet: 641-1024px",
+    "desktop: 1025px+"
+  ],
+  approach: "mobile-first"
+}
+
+## IMPLEMENTATION
+!priority_features [
+  "User authentication and registration",
+  "Product catalog with search and filters",
+  "Shopping cart functionality",
+  "Checkout process",
+  "Order history"
+]
+
+!code_style {
+  frontend: "functional components, hooks, named exports",
+  backend: "controller-service pattern, async/await",
+  naming: "camelCase for variables, PascalCase for components"
+}
+</CPML>
+
+
+Key Benefits of CompactPML:
+
+Universal Syntax - Uses patterns familiar to most programming languages: comments, key-value pairs, hierarchical structure
+Self-Documenting - Begins with clear explanation of syntax rules
+Semantic Markers - Different prefixes (@, !, -) make it easy to distinguish entity types
+Compact Representation - Avoids redundancy while preserving meaning
+Standard Patterns - Uses common industry patterns that any AI would recognize
+Domain-Agnostic Structure - Works for any project type (web, mobile, desktop)
+Balanced Detail - Provides enough information without overwhelming context limits
+Simple Hierarchy - Uses indentation to show structure (like Python/YAML)
+AI-Optimized Format - Designed to maximize information density while maintaining readability
+
+This format allows AI to:
+
+Quickly grasp project structure
+Understand component relationships
+Recognize standard patterns
+Generate appropriate code
+Maintain consistency across files

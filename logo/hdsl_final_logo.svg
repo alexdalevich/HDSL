@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg">
+  <!-- Базовый фон -->
+  <rect width="500" height="160" fill="white" />
+  
+  <!-- Левая часть - логотип -->
+  <g transform="translate(80, 80)">
+    <!-- Статичный контур -->
+    <circle cx="0" cy="0" r="55" fill="none" stroke="#333" stroke-width="2" />
+    
+    <!-- Анимированные элементы "считывания" -->
+    <circle cx="0" cy="-40" r="5" fill="#0066ff">
+      <animate attributeName="opacity" values="1;0.3;1" dur="3s" repeatCount="indefinite" />
+    </circle>
+    
+    <circle cx="34.6" cy="-20" r="5" fill="#0066ff">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite" />
+    </circle>
+    
+    <circle cx="34.6" cy="20" r="5" fill="#0066ff">
+      <animate attributeName="opacity" values="0.6;0.3;1;0.3;0.6" dur="3s" repeatCount="indefinite" />
+    </circle>
+    
+    <circle cx="0" cy="40" r="5" fill="#0066ff">
+      <animate attributeName="opacity" values="0.3;0.6;0.3;1;0.3" dur="3s" repeatCount="indefinite" />
+    </circle>
+    
+    <circle cx="-34.6" cy="20" r="5" fill="#0066ff">
+      <animate attributeName="opacity" values="1;0.3;0.6;0.3;1" dur="3s" repeatCount="indefinite" />
+    </circle>
+    
+    <circle cx="-34.6" cy="-20" r="5" fill="#0066ff">
+      <animate attributeName="opacity" values="0.6;1;0.3;0.6" dur="3s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Центральный элемент -->
+    <circle cx="0" cy="0" r="15" fill="#0066ff">
+      <animate attributeName="r" values="15;17;15;13;15" dur="2s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Линии данных -->
+    <line x1="0" y1="-40" x2="0" y2="-15" stroke="#333" stroke-width="1.5">
+      <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite" />
+    </line>
+    
+    <line x1="34.6" y1="-20" x2="13" y2="-7.5" stroke="#333" stroke-width="1.5">
+      <animate attributeName="opacity" values="0.3;0.6;1;0.3" dur="3s" repeatCount="indefinite" />
+    </line>
+    
+    <line x1="34.6" y1="20" x2="13" y2="7.5" stroke="#333" stroke-width="1.5">
+      <animate attributeName="opacity" values="0.3;0.6;1;0.6;0.3" dur="3s" repeatCount="indefinite" />
+    </line>
+    
+    <line x1="0" y1="40" x2="0" y2="15" stroke="#333" stroke-width="1.5">
+      <animate attributeName="opacity" values="0.6;0.3;1;0.3" dur="3s" repeatCount="indefinite" />
+    </line>
+    
+    <line x1="-34.6" y1="20" x2="-13" y2="7.5" stroke="#333" stroke-width="1.5">
+      <animate attributeName="opacity" values="1;0.3;0.6;0.3" dur="3s" repeatCount="indefinite" />
+    </line>
+    
+    <line x1="-34.6" y1="-20" x2="-13" y2="-7.5" stroke="#333" stroke-width="1.5">
+      <animate attributeName="opacity" values="0.6;1;0.3" dur="3s" repeatCount="indefinite" />
+    </line>
+  </g>
+  
+  <!-- Правая часть - текст логотипа одной высоты с кругом -->
+  <g transform="translate(150, 80)" text-anchor="start">
+    <!-- Текст сделан той же высоты, что и круг (110px - диаметр круга) -->
+    <text font-family="Arial, sans-serif" font-weight="bold" font-size="55" fill="#333" dominant-baseline="central" y="0">HDSL</text>
+    <text font-family="Arial, sans-serif" font-size="55" fill="#0066ff" x="180" y="0" dominant-baseline="central">3.0</text>
+  </g>
+</svg>
